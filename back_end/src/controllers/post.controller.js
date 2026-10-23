@@ -94,7 +94,60 @@ async function getAllPostsController(req,res){
      
 }
 
+async function getPostDetailsController(req,res){
+    
+    try{const token = req.cookies.token;
+    if(!token){
+        return res.status(401).json({
+            message: "unauthorized access, Token not present, try logging in again!",
+            err: err.message
+        })
+    }
+
+    let decoded = null;
+
+    try{
+        decoded = jwt.verify(token, process.env.JWT_SECRET)
+    }catch(err){
+        return res.status(401).json({
+            message: "unauthorized access, present token is wrong, try logging in again",
+            err: err.message
+        })
+    }
+
+    const userId = decoded.id;
+    const postId = req.params.postId;
+
+    const post = await postModel.findById(postId);
+
+    if(!post){
+        return res.status(404).json({
+            message: "Post not found"
+        })
+    }
+
+    const isOwner = post.userId.toString() === userId.toString();
+    
+    if(!isOwner){
+        return res.status(403).json({
+            message: "You are not authorized to view this post"
+        })
+    }
+
+    return res.status(200).json({
+        message: "post details retrieved successfully",
+        post
+    })
+}catch(err){
+    return res.status(500).json({
+        err: err.message,
+    })
+}
+
+
+}
 module.exports = {
     createPostController,
-    getAllPostsController
+    getAllPostsController,
+    getPostDetailsController
 };

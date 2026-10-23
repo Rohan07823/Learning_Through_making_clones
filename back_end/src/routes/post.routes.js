@@ -16,4 +16,9 @@ postRouter.get(
     postController.getAllPostsController
 )
 
+postRouter.get(
+    '/details/:postId',
+     postController.getPostDetailsController
+)
+
 module.exports = postRouter
