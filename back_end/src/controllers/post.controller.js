@@ -66,6 +66,35 @@ async function createPostController(req, res) {
     }
 }
 
+async function getAllPostsController(req,res){
+    const token = req.cookies.token;
+    if(!token){
+        return res.status(401).json({
+            message: "unauthorized access, Try logging in again no token present!"
+        })
+    }
+
+    let decoded = null;
+    try{
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    }catch(err){
+        return res.status(401).json({
+            message: "unauthorized access, try logging in again",
+            err: err.message
+        })
+    }
+     const userId = decoded.id;
+
+     const posts = await postModel.find({ userId });
+
+     return res.status(200).json({
+         message: "Posts retrieved successfully",
+         posts
+     });
+     
+}
+
 module.exports = {
-    createPostController
+    createPostController,
+    getAllPostsController
 };
