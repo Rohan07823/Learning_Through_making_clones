@@ -12,24 +12,9 @@ async function createPostController(req, res) {
 
 
     try {
-        console.log(req.body, req.file);
-
-        const token = req.cookies.token;
-        if(!token){
-            return res.status(401).json({
-                message: "unauthorized access"
-            })
-        }
-        try{
-                 const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-                 console.log(decodedToken);
-        }catch(err){
-            return res.status(401).json({
-                message: "unauthorized access"
-            })
-        }
-   
-        
+              
+         const decodedToken = req.user;
+          
 
         if (!req.file) {  
             return res.status(400).json({
@@ -67,22 +52,10 @@ async function createPostController(req, res) {
 }
 
 async function getAllPostsController(req,res){
-    const token = req.cookies.token;
-    if(!token){
-        return res.status(401).json({
-            message: "unauthorized access, Try logging in again no token present!"
-        })
-    }
+    
 
-    let decoded = null;
-    try{
-        decoded = jwt.verify(token, process.env.JWT_SECRET);
-    }catch(err){
-        return res.status(401).json({
-            message: "unauthorized access, try logging in again",
-            err: err.message
-        })
-    }
+     const decoded = req.user;
+    
      const userId = decoded.id;
 
      const posts = await postModel.find({ userId });
@@ -96,24 +69,9 @@ async function getAllPostsController(req,res){
 
 async function getPostDetailsController(req,res){
     
-    try{const token = req.cookies.token;
-    if(!token){
-        return res.status(401).json({
-            message: "unauthorized access, Token not present, try logging in again!",
-            err: err.message
-        })
-    }
-
-    let decoded = null;
-
     try{
-        decoded = jwt.verify(token, process.env.JWT_SECRET)
-    }catch(err){
-        return res.status(401).json({
-            message: "unauthorized access, present token is wrong, try logging in again",
-            err: err.message
-        })
-    }
+        
+    const decoded = req.user;
 
     const userId = decoded.id;
     const postId = req.params.postId;
