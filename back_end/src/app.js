@@ -14,4 +14,10 @@ app.use("/api/auth",authRouter);
 app.use("/api/post",postRouter);
 app.use("/api/users",userRouter)
 
+app.post("/api/auth/test", (req, res) => {
+    res.status(200).json({
+        message: "Auth route is working"
+    });
+});
+
 module.exports = app;
