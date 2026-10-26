@@ -17,7 +17,6 @@ const userSchema = new mongoose.Schema({
     },
     bio: {
         type : String,
-        required : [true, "bio is required"]
     },
     profileImage:{
       type : String,
