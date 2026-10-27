@@ -3,28 +3,26 @@ import "../style/form.scss";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../hooks/useAuth.jsx";
 
 const Login = () => {
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
 
+  const { handleLogin } = useAuth();
+
   async function handleFormSubmit(e) {
     e.preventDefault();
 
-    axios
-      .post(
-        "http://localhost:3000/api/auth/login",
-        {
-          username,
-          password,
-        },
-        {
-          withCredentials: true,
-        },
-      )
-      .then((res) => {
-        console.log(res.data);
-      });
+    try {
+      const response = await handleLogin(username, password);
+      console.log("Login successful:", response);
+    } catch (err) {
+      console.error(
+        "Login failed:",
+        err.response?.data?.message ?? err.message,
+      );
+    }
   }
 
   return (

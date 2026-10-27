@@ -5,11 +5,19 @@ import Register from './features/auth/pages/register';
 
 export const router = createBrowserRouter([
     {
+        path:'/',
+        element: <h1>welcome </h1>
+    },
+    {
         path: '/login',
         element: <Login />
     },
     {
         path: '/register',
         element: <Register />
+    },
+    {
+        path: '/get-me',
+        element : <getMe/>
     }
 ]);

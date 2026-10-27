@@ -127,7 +127,20 @@ async function loginController(req, res) {
   });
 }
 
+async function getMeController(req,res){
+    try{
+      const username = req.user.username
+      const user = await userModel.findOne({username});
+      return res.send(user)
+    }catch(err){
+      return res.status(401).json({
+        err:err.message
+      })
+    }
+}
+
 module.exports = {
   registerController,
   loginController,
+  getMeController
 };
